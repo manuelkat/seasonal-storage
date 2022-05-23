@@ -1,0 +1,1077 @@
+locations:
+
+    #ENERGY HUB TECHS
+    
+    E1:
+        coordinates: {x: 1, y: 8}
+        techs:
+            grid_electricity:
+    E2:
+        coordinates: {x: 7, y: 8}
+        techs:
+            battery:
+    E3:
+        coordinates: {x: 3, y: 4}
+        techs:
+            wshp:
+    E4:
+        coordinates: {x: 5, y: 4}
+        techs:
+            wttes:
+    E5:
+        coordinates: {x: 7, y: 4}
+        techs:
+            wshp:
+    E6:
+        coordinates: {x: 1, y: 2}
+        techs:
+            alkaline_electrolyzer:
+            pem_electrolyzer:
+    E7:
+        coordinates: {x: 3, y: 2}
+        techs:
+            hydrogen_storage_low_pressure:
+    E8:
+        coordinates: {x: 5, y: 2}
+        techs:
+            pem_fuel_cell:
+    E9:
+        coordinates: {x: 2, y: 1}
+        techs:
+            compressor:
+    E10:
+        coordinates: {x: 4, y: 1}
+        techs:
+            hydrogen_storage_high_pressure:
+            dummy_tech:
+            
+    E11:
+        coordinates: {x: 11, y: 8}
+        techs:
+            grid_gas:
+            
+            
+    #HOMES WITH PV AND PVT
+    
+    
+    H1:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P1:
+        techs:
+            pv:
+            st:
+            
+    H2:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P2:
+        techs:
+            pv:
+            st:
+    
+    H3:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P3:
+        techs:
+            pv:
+            st:
+            
+    H4:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P4:
+        techs:
+            pv:
+            st:
+           
+    H5:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P5:
+        techs:
+            pv:
+            st:
+            
+    H6:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P6:
+        techs:
+            pv:
+            st:
+            
+    H7:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P7:
+        techs:
+            pv:
+            st:
+            
+    H8:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P8:
+        techs:
+            pv:
+            st:
+            
+    H9:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P9:
+        techs:
+            pv:
+            st:
+            
+    H10:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P10:
+        techs:
+            pv:
+            st:
+            
+    H11:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P11:
+        techs:
+            pv:
+            st:
+            
+    H12:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P12:
+        techs:
+            pv:
+            st:
+    
+    H13:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P13:
+        techs:
+            pv:
+            st:
+            
+    H14:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P14:
+        techs:
+            pv:
+            st:
+           
+    H15:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P15:
+        techs:
+            pv:
+            st:
+            
+    H16:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P16:
+        techs:
+            pv:
+            st:
+            
+    H17:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P17:
+        techs:
+            pv:
+            st:
+            
+    H18:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P18:
+        techs:
+            pv:
+            st:
+            
+    H19:   
+        techs:
+            demand_electricity:
+            demand_heat:
+            buffer_storage:
+            gas_boiler:
+            
+    P19:
+        techs:
+            pv:
+            st:
+            
+
+    P1.coordinates: {x: 13, y: 7} 
+    P2.coordinates: {x: 15, y: 7} 
+    P3.coordinates: {x: 17, y: 7} 
+    P4.coordinates: {x: 19, y: 7} 
+    P5.coordinates: {x: 21, y: 7} 
+    P6.coordinates: {x: 23, y: 7}
+    P7.coordinates: {x: 25, y: 7} 
+    P8.coordinates: {x: 27, y: 7} 
+    P9.coordinates: {x: 29, y: 7} 
+    P10.coordinates: {x: 31, y: 7} 
+    P11.coordinates: {x: 13, y: 1} 
+    P12.coordinates: {x: 15, y: 1} 
+    P13.coordinates: {x: 17, y: 1} 
+    P14.coordinates: {x: 19, y: 1} 
+    P15.coordinates: {x: 21, y: 1} 
+    P16.coordinates: {x: 23, y: 1} 
+    P17.coordinates: {x: 25, y: 1} 
+    P18.coordinates: {x: 27, y: 1} 
+    P19.coordinates: {x: 29, y: 1}
+    
+    #Available space on each home roof for the sum of PV and ST techs
+    #Extracted from calculations in "UK_house_selection_with_metadata"
+    P1.available_area: 8.8455
+    P2.available_area: 32.5600
+    P3.available_area: 26.8620
+    P4.available_area: 8.2485
+    P5.available_area: 8.6827
+    P6.available_area: 9.5509
+    P7.available_area: 10.6905
+    P8.available_area: 62.2710
+    P9.available_area: 5.0468
+    P10.available_area: 5.1553
+    P11.available_area: 26.3736
+    P12.available_area: 38.8278
+    P13.available_area: 6.6748
+    P14.available_area: 38.5836
+    P15.available_area: 7.3260
+    P16.available_area: 44.4444
+    P17.available_area: 10.1479
+    P18.available_area: 43.2234
+    P19.available_area: 4.5584
+    
+         
+    H1.coordinates: {x: 13, y: 5} 
+    H2.coordinates: {x: 15, y: 5} 
+    H3.coordinates: {x: 17, y: 5} 
+    H4.coordinates: {x: 19, y: 5} 
+    H5.coordinates: {x: 21, y: 5} 
+    H6.coordinates: {x: 23, y: 5}
+    H7.coordinates: {x: 25, y: 5} 
+    H8.coordinates: {x: 27, y: 5} 
+    H9.coordinates: {x: 29, y: 5} 
+    H10.coordinates: {x: 31, y: 5} 
+    H11.coordinates: {x: 13, y: 3} 
+    H12.coordinates: {x: 15, y: 3} 
+    H13.coordinates: {x: 17, y: 3} 
+    H14.coordinates: {x: 19, y: 3} 
+    H15.coordinates: {x: 21, y: 3} 
+    H16.coordinates: {x: 23, y: 3} 
+    H17.coordinates: {x: 25, y: 3} 
+    H18.coordinates: {x: 27, y: 3} 
+    H19.coordinates: {x: 29, y: 3}
+    
+    #DISTRIBUTIOON NODES
+    #they connect lines/pipes
+    
+    DE1:
+    DE2:
+    DE3:
+    DE4: 
+    DE5: 
+    DE6: 
+    DH1: 
+    DH2: 
+    DH3: 
+    DH4: 
+    DH5: 
+    DH6: 
+    DH7: 
+    DH8: 
+    DH9: 
+    DH10: 
+    
+    DE1.coordinates: {x: 1, y: 6} 
+    DE2.coordinates: {x: 7, y: 6} 
+    DE3.coordinates: {x: 9, y: 6} 
+    DE4.coordinates: {x: 1, y: 4} 
+    DE5.coordinates: {x: 9, y: 4} 
+    DE6.coordinates: {x: 9, y: 2}
+    DH1.coordinates: {x: 13, y: 4} 
+    DH2.coordinates: {x: 15, y: 4} 
+    DH3.coordinates: {x: 17, y: 4} 
+    DH4.coordinates: {x: 19, y: 4} 
+    DH5.coordinates: {x: 21, y: 4} 
+    DH6.coordinates: {x: 23, y: 4} 
+    DH7.coordinates: {x: 25, y: 4} 
+    DH8.coordinates: {x: 27, y: 4} 
+    DH9.coordinates: {x: 29, y: 4} 
+    DH10.coordinates: {x: 31, y: 4} 
+    
+    
+
+
+#TRANSMISSION LINKS
+
+links:
+
+    #ENERGY HUB
+    
+    #TE1
+    E1, DE1:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE2
+    E2, DE2:
+        techs:
+            electrical_line:
+    #TE3
+    DE1, DE2:
+        techs:
+            electrical_line:
+    #TE4
+    DE3, DE2:
+        techs:
+            electrical_line:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE5
+    DE1, DE4:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE6
+    DE2, E4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE7
+    DE2, E5:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE8
+    DE5, DE3:
+        techs:
+            electrical_line:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE9
+    DE4, E3:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE10
+    E3, E4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true #we model the wshp without water input (see techs)
+    #TE11
+    ##we model the wshp without water input (see techs)
+    #E4, E5:
+    #    techs:
+    #        heat_pipe:
+    #            constraints:
+    #                one_way: true 
+    
+    #TE12
+    E5, DE5: 
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE13
+    DE4, E6:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE14
+    E6, E4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE15
+    E8, E4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE16
+    E4, DE6:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+    #TE17
+    DE6, DE5:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+                constraints:
+                    one_way: true
+    #TE18
+    E6, E7:
+        techs:
+            hydrogen_pipe:
+                constraints:
+                    one_way: true
+    #TE19
+    E7, E8:
+        techs:
+            hydrogen_pipe:
+                constraints:
+                    one_way: true
+    #TE20
+    E8, DE6:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+                   
+    #TE21
+    E6, E9:
+        techs:
+            hydrogen_pipe:
+                constraints:
+                    one_way: true
+    #TE22
+    E9, E10:
+        techs:
+            hydrogen_pipe_high_pressure:
+                constraints:
+                    one_way: true
+                    
+    #TE23
+    E10, E8:
+        techs:
+            hydrogen_pipe:
+                constraints:
+                    one_way: true
+                    
+    #TE24
+    DE4, E9:
+        techs:
+            electrical_line:
+                constraints:
+                    one_way: true
+    
+    
+    #LINK BETWEEN ENERGY HUB AND HOME NETWORK
+    
+    #TH1
+    DE5, DH1:
+        techs:
+            heat_pipe:
+            electrical_line:
+    
+    
+    #HOME NETWORK
+    
+    #TH1A
+    DH1, H1:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH1B
+    H1, P1:
+        techs:
+            electrical_line:
+            
+    #TH1C
+    P1, DH1:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH2A
+    DH2, H2:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH2B
+    H2, P2:
+        techs:
+            electrical_line:
+            
+    #TH2C
+    P2, DH2:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH3A
+    DH3, H3:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH3B
+    H3, P3:
+        techs:
+            electrical_line:
+            
+    #TH3C
+    P3, DH3:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH4A
+    DH4, H4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH4B
+    H4, P4:
+        techs:
+            electrical_line:
+            
+    #TH4C
+    P4, DH4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH5A
+    DH5, H5:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH5B
+    H5, P5:
+        techs:
+            electrical_line:
+            
+    #TH5C
+    P5, DH5:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH6A
+    DH6, H6:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH6B
+    H6, P6:
+        techs:
+            electrical_line:
+            
+    #TH6C
+    P6, DH6:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH7A
+    DH7, H7:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH7B
+    H7, P7:
+        techs:
+            electrical_line:
+            
+    #TH7C
+    P7, DH7:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH8A
+    DH8, H8:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH8B
+    H8, P8:
+        techs:
+            electrical_line:
+            
+    #TH8C
+    P8, DH8:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH9A
+    DH9, H9:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH9B
+    H9, P9:
+        techs:
+            electrical_line:
+            
+    #TH9C
+    P9, DH9:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                 
+    #TH10A
+    DH10, H10:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH10B
+    H10, P10:
+        techs:
+            electrical_line:
+            
+    #TH10C
+    P10, DH10:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                    
+    #TH11A
+    DH1, H11:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH11B
+    H11, P11:
+        techs:
+            electrical_line:
+            
+    #TH11C
+    P11, DH1:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                   
+    #TH12A
+    DH2, H12:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH12B
+    H12, P12:
+        techs:
+            electrical_line:
+            
+    #TH12C
+    P12, DH2:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH13A
+    DH3, H13:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH13B
+    H13, P13:
+        techs:
+            electrical_line:
+            
+    #TH13C
+    P13, DH3:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH14A
+    DH4, H14:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH14B
+    H14, P14:
+        techs:
+            electrical_line:
+            
+    #TH14C
+    P14, DH4:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH15A
+    DH5, H15:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH15B
+    H15, P15:
+        techs:
+            electrical_line:
+            
+    #TH15C
+    P15, DH5:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH16A
+    DH6, H16:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH16B
+    H16, P16:
+        techs:
+            electrical_line:
+            
+    #TH16C
+    P16, DH6:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH17A
+    DH7, H17:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH17B
+    H17, P17:
+        techs:
+            electrical_line:
+            
+    #TH17C
+    P17, DH7:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH18A
+    DH8, H18:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH18B
+    H18, P18:
+        techs:
+            electrical_line:
+            
+    #TH18C
+    P18, DH8:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                
+    #TH19A
+    DH9, H19:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+            electrical_line:
+            
+    #TH19B
+    H19, P19:
+        techs:
+            electrical_line:
+            
+    #TH19C
+    P19, DH9:
+        techs:
+            heat_pipe:
+                constraints:
+                    one_way: true
+                    
+
+    #------------------
+    
+    #TH2
+    DH1, DH2:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH3
+    DH2, DH3:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH4
+    DH3, DH4:
+        techs:
+            heat_pipe:
+            electrical_line:
+            
+    #TH5
+    DH4, DH5:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH6
+    DH5, DH6:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH7
+    DH6, DH7:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH8
+    DH7, DH8:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH9
+    DH8, DH9:
+        techs:
+            heat_pipe:
+            electrical_line:
+    #TH10
+    DH9, DH10:
+        techs:
+            heat_pipe:
+            electrical_line:
+            
+            
+    #GAS
+    
+    E11, H1:
+        techs:
+            gas_pipe:
+            
+    E11, H2:
+        techs:
+            gas_pipe:
+            
+    E11, H3:
+        techs:
+            gas_pipe:
+            
+    E11, H4:
+        techs:
+            gas_pipe: 
+            
+    E11, H5:
+        techs:
+            gas_pipe:
+            
+    E11, H6:
+        techs:
+            gas_pipe:
+            
+    E11, H7:
+        techs:
+            gas_pipe:
+            
+    E11, H8:
+        techs:
+            gas_pipe: 
+            
+    E11, H9:
+        techs:
+            gas_pipe:
+            
+    E11, H10:
+        techs:
+            gas_pipe:
+            
+    E11, H11:
+        techs:
+            gas_pipe:
+            
+    E11, H12:
+        techs:
+            gas_pipe: 
+            
+    E11, H13:
+        techs:
+            gas_pipe:
+            
+    E11, H14:
+        techs:
+            gas_pipe:
+            
+    E11, H15:
+        techs:
+            gas_pipe:
+            
+    E11, H16:
+        techs:
+            gas_pipe: 
+            
+    E11, H17:
+        techs:
+            gas_pipe:
+            
+    E11, H18:
+        techs:
+            gas_pipe:
+            
+    E11, H19:
+        techs:
+            gas_pipe:
+            
+   
+                    
+                    
+                    
+                    
+                    
+                    
+    
+         
+            
+    

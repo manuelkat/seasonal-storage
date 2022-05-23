@@ -1,0 +1,277 @@
+scenarios:
+    
+    #PLANNING MODE
+    
+    #Base
+    all_subsidies: ['fuel_cell_subsidy', 'st_subsidy', 'one_year']
+    
+    #Heat demand coverage only by gas
+    gas_only: ['deactivate_heat_techs_besides_gas', 'one_year']
+    
+    #50% Higher Electricity Price
+    all_subsidies_electricity_50_higher: ['electricity_50_higher', 'fuel_cell_subsidy', 'st_subsidy', 'one_year']
+    
+    #25% less grid electricity compared to base
+    grid_electricity_25%: ['fuel_cell_subsidy', 'st_subsidy', 'one_year', '25%_less_grid_electricity', 'disable_gas']
+    
+    #Base - Ecological Optimization
+    lowest_overall_emissions: ['emission_optimization', 'fuel_cell_subsidy', 'st_subsidy', 'one_year']
+    
+    #Ecologocial Optimum
+    lowest_overall_emissions_monetary: ['lowest_overall_emissions_operate_tech_sizes', 'fuel_cell_subsidy', 'st_subsidy', 'one_year']
+
+    #OPERATION MODE
+    
+    #25% less grid electricity compared to base
+    operate_strategy: ['fuel_cell_subsidy', 'st_subsidy', 'one_year', '25%_operate_tech_sizes', 'operate_mode', 'initial_storage', 'seasonal_operation_incentives_mon']
+    
+    
+overrides:
+    
+    #'one_year' creates as an average year between 2020 and 2050.    
+    one_year:
+        model.subset_time: ['2020-06-15', '2021-06-14']
+
+    25%_less_grid_electricity:
+    #25% less in comparison to the results of the Base scenario
+         group_constraints:
+             carrier_cap:
+                techs: ['grid_electricity']
+                locs: ['E1']
+                cost_max:
+                    monetary: 14111.3475
+    
+    disable_gas:
+        techs.gas_boiler.exists: false
+    
+    initial_storage:
+        techs.hydrogen_storage_low_pressure.constraints.storage_initial: 0.4267
+        
+    electricity_25_higher:
+        techs.grid_electricity.costs.monetary.om_con: 0.43675
+        
+    electricity_50_higher:
+        techs.grid_electricity.costs.monetary.om_con: 0.5241
+        
+    seasonal_operation_incentives_mon:
+        #Path to updated timeseries data for artificial costs and profits
+        model.timeseries_data_path: 'INSERT PATH HERE'
+        techs.pem_fuel_cell.costs.emissions.om_con: file=om_con_fuel_cell_em.csv:Edinburgh
+        techs.alkaline_electrolyzer.costs.emissions.om_con: file=om_con_electrolyzer_em.csv:Edinburgh
+        techs.pem_fuel_cell.costs.monetary.om_con: file=om_con_fuel_cell_mon.csv:Edinburgh
+        techs.alkaline_electrolyzer.costs.monetary.om_con: file=om_con_electrolyzer_mon.csv:Edinburgh
+        
+        
+    operate_mode:
+        run:
+            mode: operate
+            operation:
+                horizon: 48 # hours
+                window: 48 # hours
+                
+    operate_mode_365:
+        run:
+            mode: operate
+            operation:
+                horizon: 8760 # hours
+                window: 8760 # hours
+                
+    25%_operate_tech_sizes:
+        #fix tech sizes
+        techs.grid_electricity.constraints.energy_cap_equals: 100
+        techs.battery.constraints.energy_cap_equals: 13.14
+        techs.battery.constraints.storage_cap_equals: 49.8
+        
+        locations.E3.techs.wshp.constraints.energy_cap_equals: 1.81
+        techs.wttes.constraints.energy_cap_equals: 102.77
+        techs.wttes.constraints.storage_cap_equals: 710.16
+        locations.E5.techs.wshp.constraints.energy_cap_equals: 109.18
+        
+        techs.alkaline_electrolyzer.constraints.energy_cap_equals: 11.35
+        techs.pem_electrolyzer.constraints.energy_cap_equals: 0
+        techs.hydrogen_storage_low_pressure.constraints.energy_cap_equals: 11.35
+        techs.hydrogen_storage_low_pressure.constraints.storage_cap_equals: 15365.91
+        
+        techs.pem_fuel_cell.constraints.energy_cap_equals: 2.17
+        techs.compressor.constraints.energy_cap_equals: 0
+        techs.hydrogen_storage_high_pressure.constraints.energy_cap_equals: 0
+        techs.hydrogen_storage_high_pressure.constraints.storage_cap_equals: 0
+        
+        techs.buffer_storage.constraints.energy_cap_max: 1
+        
+        locations.P1:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.87
+        locations.H1:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P2:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 6.9
+        locations.H2:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P3:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 5.69
+        locations.H3:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P4:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.75
+        locations.H4:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P5:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.84
+        locations.H5:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+        
+        locations.P6:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 2.02
+        locations.H6:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P7:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 2.26
+        locations.H7:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P8:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 13.19
+        locations.H8:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P9:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.07
+        locations.H9:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P10:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.09
+        locations.H10:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P11:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 5.59 
+        locations.H11:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P12:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 8.23
+        locations.H12:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P13:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.41
+        locations.H13:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P14:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 8.17
+        locations.H14:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P15:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 1.55
+        locations.H15:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P16:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 9.42
+        locations.H16:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P17:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 2.15
+        locations.H17:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P18:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 9.16
+        locations.H18:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+            
+        locations.P19:
+            techs.st.constraints.energy_cap_equals: 0
+            techs.pv.constraints.energy_cap_equals: 0.97
+        locations.H19:
+            techs.gas_boiler.constraints.energy_cap_equals: 0
+        
+        techs.grid_gas.constraints.energy_cap_equals: 0
+        
+        techs.electrical_line.constraints.energy_cap_equals: 10000
+        techs.heat_pipe.constraints.energy_cap_equals: 10000
+        techs.hydrogen_pipe.constraints.energy_cap_equals: 10000
+        techs.gas_pipe.constraints.energy_cap_equals: 10000
+        
+                
+    deactivate_heat_techs_besides_gas:
+        techs.hydrogen_storage_low_pressure.exists: false
+        techs.hydrogen_storage_high_pressure.exists: false
+        techs.alkaline_electrolyzer.exists: false
+        techs.pem_electrolyzer.exists: false
+        techs.wttes.exists: false
+        techs.buffer_storage.exists: false
+        techs.wshp.exists: false
+        techs.compressor.exists: false
+        techs.pem_fuel_cell.exists: false
+        techs.st.exists: false
+        techs.dummy_tech.exists: false
+        
+    
+            
+    
+    
+    st_subsidy:
+        techs.st.costs.monetary.energy_cap: 262.91
+        #BAFA subsidy 30%
+        #0.7*377.01 = 262.91€ per kW
+        #https://www.bafa.de/DE/Energie/Heizen_mit_Erneuerbaren_Energien/Foerdervoraussetzungen/foerdervoraussetzungen_node.html
+    
+    fuel_cell_subsidy:
+        #WARNING: Always check if the fuel cell has not more than 5kW, otherwise no more subsidy!
+        #KfW fuel cell subsidy (grant 433)
+        #fix subsidy of 6.800€ + variable subsidy (per 1kWel max 5500€ subsidy)
+        #total max 34.300€ (5kWel)
+        #max. 40% of the price eligible -> in our case always achieved, as the fuel cell has a good price-performance ratio
+        #determined with calculator on website:
+        #1kW = 1.972 Euro
+        #2kW = 3.943 Euro
+        #3kW = 5.916 Euro
+        #4kW = 7.887 Euro
+        #5kW = 9.859 Euro
+        #https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestandsimmobilie/F%C3%B6rderprodukte/Energieeffizient-Bauen-und-Sanieren-Zuschuss-Brennstoffzelle-(433)/
+        #1972€/kWel subsidy
+        #42.6kWel/89.46kW output power = 0.48 kWel/kW output power
+        #1972€/kWel * 0.48 kWel/kW output power = 946.56€/kW output
+        #Price reduction
+        #2347.42€/kW output - 946.56€/kW output = 1400.86
+        techs.pem_fuel_cell.costs.monetary.energy_cap: 1400.86
+
+    emission_optimization:
+        run:
+            objective_options:
+                cost_class: {'emissions': 1, 'monetary': 0}
+
+    
+        
+        
+
+
+

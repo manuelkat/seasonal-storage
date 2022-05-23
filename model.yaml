@@ -1,0 +1,34 @@
+import:  # Import other files from paths relative to this file, or absolute paths
+    - 'model_config/techs.yaml'
+    - 'model_config/locations.yaml'
+    - 'scenarios.yaml'
+
+model:
+    name: 'Seasonal storage'
+
+    # What version of Calliope this model is intended for
+    calliope_version: 0.6.6
+
+    # Time series data path - can either be a path relative to this file, or an absolute path
+    timeseries_data_path: 'timeseries_data'
+
+    #In all scenarios, it gets changed to one average year -> see scenarios
+    subset_time: ['2020-06-15', '2050-06-14']  # The model is designed to make a simulation for 30 years possible as well
+    
+
+run:
+    mode: plan  # Choices: plan, operate, spores
+
+    solver: gurobi #Change according to p.14
+    solver_options:
+        Threads: 16 #8
+ 
+    #For a model to find a feasible solution, supply must always be able to meet demand. To avoid the solver failing to find a solution, you can ensure feasibility.This will create an unmet_demand decision variable in the optimisation, which can pick up any mismatch between supply and demand, across all energy carriers. It has a very high cost associated with its use, so it will only appear when absolutely necessary.
+    ensure_feasibility: true # Switching on unmet demand
+
+    bigM: 1e6 # setting the scale of unmet demand, which cannot be too high, otherwise the optimisation will not converge
+
+    objective_options.cost_class: {monetary: 1}
+    
+    cyclic_storage: true #If true: As a result, a technology’s initial stored energy at a given location will be equal to its stored energy at the end of the model’s last timestep.
+

@@ -1,0 +1,864 @@
+#LOAN INTEREST
+
+#For all techs, the interest rate of a KfW loan (https://www.kfw.de/) is assumed for the CAPEX (energy_cap, storage_cap). OPEX are assumed not to be covered by the loan.
+
+#The loan originates from the program group 'Renewable Energies', more precisely program 270. A good credit rating and a valuable collateralization ≥ 70% are assumed, which result in the loan price class B. The loan includes annual installment payments and runs for 20 years.
+
+#These assumptions result in an annual effective interest rate of 3.25% as of 03/29/2022. This value results from this source, where the current daily interest rates can be retrieved: https://www.kfw-formularsammlung.de/KonditionenanzeigerINet/KonditionenAnzeiger
+
+#The calculated total of installment payments is automatically divided by the lifetime of the component by Calliope to calculate the straight-line depreciation rate for one year. 
+
+tech_groups:
+    supply:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+    supply_plus:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+    conversion:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+    conversion_plus:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+    transmission:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+    storage:
+        costs.monetary.interest_rate: 0.0325
+        costs.emissions.interest_rate: 0
+
+#All prices in $ were converted to € with a factor of 0.85.
+
+techs:
+
+#ENERGY HUB
+  
+    #SUPPLY
+      
+    grid_electricity:
+        essentials:
+            name: 'Grid Electricity'
+            color: '#C5ABE3'
+            parent: supply
+            carrier: electricity
+        constraints:
+            resource: inf
+            lifetime: 30
+        costs:
+            monetary:
+                om_con: 0.3494
+                
+    grid_gas:
+        essentials:
+            name: 'Grid Gas'
+            color: '#C5ABE3'
+            parent: supply
+            carrier: gas
+        constraints:
+            resource: inf
+            lifetime: 30
+        costs:
+            monetary:
+                om_con: 0.1121
+        
+   
+    #STORAGE
+                
+    battery:
+        essentials:
+            name: 'Tesla Powerwall 2'
+            color: '#3B61E3'
+            parent: storage
+            carrier: electricity
+        constraints:
+            energy_cap_per_storage_cap_max: 0.3571 #ratio of maximum charge/discharge (kW) for a given maximum storage capacity (kWh)
+            #5 kW/14 kWh = 0.3571
+            #Tesla: Tesla Powerwall 2 Datasheet (2019).
+            #URL https://www.tesla.com/sites/default/files/pdfs/powerwall/Powerwall%202_AC_Datasheet_en_northamerica.pdf
+            energy_eff: 0.9487
+            #In the case of a storage technology, energy_eff applies twice: on charging and discharging.
+            #round trip efficiency 0.9: sqrt(0.9) = 0.9487
+            #Tesla: Tesla Powerwall 2 Datasheet (2019). 
+            #URL https://www.tesla.com/sites/default/files/pdfs/powerwall/Powerwall%202_AC_Datasheet_en_northamerica.pdf
+            storage_loss: 0.000041096 # fraction of the stored energy that gets lost each hour
+            #technology class is Li-ion NMC
+            #ITP Renewables: Tesla Powerwall 2 AC (2021).
+            #URL https://batterytestcentre.com.au/batteries/tesla-powerwall-2-ac/#:~:text=The%20Tesla%20Powerwall%202%20is,are%20manufactured%20in%20the%20USA.
+            #3% self-discharge rate per month -> 1 month has 730 hours -> 0.03/730 = 0.00004109589
+            #p.206
+            #Vetter, M., Lux, S.: Chapter 11 - Rechargeable Batteries with Special Reference to Lithium-Ion Batteries. In: Letcher, T.M. (ed) Storing Energy, pp. 205–225. Elsevier, Oxford (2016).
+            #DOI 10.1016/B978-0-12-803440-8.00011-7
+            lifetime: 20 #years
+            #p.42
+            #Naumann, M., Karl, R.C., Truong, C.N., Jossen, A., Hesse, H.C.: Lithium-ion Battery Cost Analysis in PV-household Application Energy Procedia 73, 37–47 (2015).
+            #DOI 10.1016/j.egypro.2015.07.555
+        costs:
+            monetary:
+                storage_cap: 582.86 #per kWh
+                #10 Tesla Powerwall 2 (8000€) incl. supporting hardware (1600€) cost 81.600€
+                #Market price as of 08/01/2021
+                #Tesla: Powerwall (2021).
+                #URL https://www.tesla.com/de_de/powerwall/design
+                #10 Tesla Powerwall 2 have 10*14kWh capacity = 140kWh
+                #Tesla: Tesla Powerwall 2 Datasheet (2019). 
+                #URL https://www.tesla.com/sites/default/files/pdfs/powerwall/Powerwall%202_AC_Datasheet_en_northamerica.pdf
+                #81600€/140kWh = 582.86€ per kWh
+                om_annual: 8.74 #€ per kWh 
+                #1.5% of capital investment costs
+                #0.015*582.86 = 8.74 € per kWh 
+                #p.85
+                #Weniger, J., Tjaden, T., Quaschning, V.: Sizing of residential pv battery systems. Energy Procedia 46, 78–87 (2014). 
+                #DOI 10.1016/j.egypro.2014.01.160
+    
+    wttes:
+        essentials:
+            name: 'TWL Buffer Tank P-2000'
+            color: '#E4AB97'
+            parent: storage
+            carrier: heat
+        constraints:
+            energy_eff: 0.9487
+            #In the case of a storage technology, energy_eff applies twice: on charging and discharging
+            #round trip efficiency 0.9487*0.9487 = 0.9
+            #Irena states, that the round trip efficiency of a WTTES is between 50 and 90%, we take 90% and add an hourly loss over time
+            #data for district heating and cooling are equal to building data
+            #p.69
+            #IRENA: Innovation Outlook: Thermal Energy Storage. International Renewable Energy Agency, Abu Dhabi (2020).
+            #URL https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Nov/IRENA_Innovation_Outlook_TES_2020.pdf
+            storage_loss: 0.0006 # fraction of the power stored that gets lost each hour
+            #value for 2000L which corresponds approximately to the capacity resulting from the results
+            #112.5Wh per hour heat loss
+            #p.39
+            #TWL-Technologie GmbH: Produktkatalog: Speicher sind unser Element (2020).
+            #URL https://twl-technologie.de/files/6185/upload/kunden/kundenbereich/kataloge_flyer/pdf/Gesamtkatalog_2020.pdf
+            #Max temperature 95 degrees celsius
+            #Measurement of the heat loss according to EN 12897 
+            #Prerequisite: room temperature 20 +/- 3°C
+            #p.9
+            #Huch GmbH Behälterbau: Effizienzklassen für Warmwasserspeicher (2017).
+            #URL https://www.energiegemeinschaft.com/wp-content/uploads/2017/06/170531_Vortrag_Buderus_Magdeburg_Huch.pdf
+            #heating of 2000L from 20 degrees celsius to 95 degrees celsius needs 174417Wh
+            #112.5Wh per hour/174417Wh = 0.0006 per hour
+            lifetime: 28.3
+            #average value of 28.3 out of 6 papers
+            #p.19
+            #Tianrun Yang, Wen Liu, Gert Jan Kramer, Qie Sun: Seasonal thermal energy storage: A techno-economic literature review. Renewable and Sustainable Energy Reviews 139, 110732 (2021). 
+            #DOI 10.1016/j.rser.2021.110732   
+        costs:
+            monetary:
+                storage_cap: 10.86 # € per kWh storage capacity
+                #1895€ for 2000L
+                #heating of 2000L from 20 degrees celsius to 95 degrees celsius needs 174.417kWh
+                #1895€/174.417kWh = 10.86€/kWh
+                #Market price as of 04/01/2022
+                om_annual: 0.11 #€ per kWh
+                #the annual O&M cost of the thermal storage in two papers (Jincheon, KR	[35], Marseille, FR	[36]) are
+                #A: 2803.7€, B: 216.26€
+                #the initial capital investment for the thermal storage was
+                #A: 280372.91€, B: 21625.91€
+                #the fraction of the maintenance costs in relation to the capital investement costs is: 
+                #A: 0.01, B: 0.01
+                #0.01*10.86 = 0.11 €/kW
+                #p.18
+                #Tianrun Yang, Wen Liu, Gert Jan Kramer, Qie Sun: Seasonal thermal energy storage: A techno-economic literature review. Renewable and Sustainable Energy Reviews 139, 110732 (2021). 
+                #DOI 10.1016/j.rser.2021.110732
+    
+    buffer_storage:
+        essentials:
+            name: '120 Liters HD24 Hot Water Tank, Enameled Floor Standing Tank With One Register'
+            color: '#515DEF'
+            parent: storage
+            carrier: heat
+        constraints:
+            energy_eff: 0.9487
+            #In the case of a storage technology, energy_eff applies twice: on charging and discharging
+            #round trip efficiency 0.9487*0.9487 = 0.9
+            #Irena states, that the round trip efficiency of a WTTES is between 50 and 90%, we take 90% and add an hourly loss over time
+            #data for district heating and cooling are equal to building data
+            #p.69
+            #IRENA: Innovation Outlook: Thermal Energy Storage. International Renewable Energy Agency, Abu Dhabi (2020).
+            #URL https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Nov/IRENA_Innovation_Outlook_TES_2020.pdf
+            storage_loss: 0.0032 # fraction of the power stored that gets lost each hour    
+            #34Wh per hour heat loss
+            #storage volume 120L
+            #Max temperature 95 degrees celsius
+            #p.2
+            #Heizungsdiscount24: Warmwasser-Standspeicher mit einem Wärmetauscher, Gießen (2021).
+            #URL https://www.heizungsdiscount24.de/pdf/HeizungsDiscount24-Standspeicher-technisches-Datenblatt.pdf
+            #Measurement of the heat loss according to EN 12897 
+            #Prerequisite: room temperature 20 +/- 3°C
+            #p.9
+            #Huch GmbH Behälterbau: Effizienzklassen für Warmwasserspeicher (2017).
+            #URL https://www.energiegemeinschaft.com/wp-content/uploads/2017/06/170531_Vortrag_Buderus_Magdeburg_Huch.pdf
+            #heating of 120L from 20 degrees celsius to 95 degrees celsius needs 10465Wh
+            #34Wh/10465Wh = 0.0032  
+            lifetime: 28.3
+            #average value of 28.3 out of 6 papers
+            #p.19
+            #Tianrun Yang, Wen Liu, Gert Jan Kramer, Qie Sun: Seasonal thermal energy storage: A techno-economic literature review. Renewable and Sustainable Energy Reviews 139, 110732 (2021). 
+            #DOI 10.1016/j.rser.2021.110732  
+            storage_discharge_depth: 0.3333 #Defines the minimum level of storage state of charge, as a fraction of total storage capacity
+            #min temperature of 45 degrees, max temperature of 90 degrees Celsius
+            #heating of 120L from 20 degrees Celsius to 45 degrees Celsius = 3488Wh
+            #heating of 120L from 20 degrees celsius to 95 degrees celsius = 10465Wh
+            #3488Wh/10465Wh = 0.3333
+            storage_cap_equals: 10.4650 #fix storage capacity for every home
+            #heating of 120L from 20 degrees celsius to 95 degrees celsius = 10465Wh = 10.465kWh
+        costs:
+            monetary:
+                storage_cap: 38.12 # € per kWh storage capacity
+                #398.90€/10.465kWh = 38.12
+                #Market price as of 07/01/2021
+                om_annual: 0.38 #€ per kWh
+                #the annual O&M cost of the thermal storage in two papers (Jincheon, KR	[35], Marseille, FR	[36]) are
+                #A: 2803.7€, B: 216.26€
+                #the initial capital investment for the thermal storage was
+                #A: 280372.91€, B: 21625.91€
+                #the fraction of the maintenance costs in relation to the capital investement costs is: 
+                #A: 0.01, B: 0.01
+                #0.01*38.12€/kW = 0.38 €/kW
+                #p.18
+                #Tianrun Yang, Wen Liu, Gert Jan Kramer, Qie Sun: Seasonal thermal energy storage: A techno-economic literature review. Renewable and Sustainable Energy Reviews 139, 110732 (2021). 
+                #DOI 10.1016/j.rser.2021.110732
+    
+    hydrogen_storage_low_pressure:
+        essentials:
+            name: 'Hydrogen Storage (30 Bar)'
+            color: '#D45F3F'
+            parent: storage
+            carrier: hydrogen
+        constraints:
+            energy_eff: 1 #nearly no loss in pressure tanks
+            storage_loss: 0 # fraction of the power stored that gets lost each hour
+            #no loss over time assumed
+            lifetime: 20
+            #p.11
+            #Duman, A.C., Güler, O.: Techno-economic analysis of off-grid pv/wind/fuel cell hybrid system combinations with a comparison of regularly and seasonally occupied households. Sustainable Cities and Society 42, 107–126 (2018). 
+            #DOI 10.1016/j.scs.2018.06.029
+        costs:
+            monetary:
+                storage_cap: 12.67
+                #38€/Nm3
+                #Hydrogen: 3kWh/Nm3 => 1/3 Nm3/kWh
+                #38€/Nm3 * 1/3 Nm3/kWh = 12.67 €/kWh
+                #p.17
+                #Charlotte van Leeuwen, Andreas Zauner: Innovative large-scale energy storage technologies and Power-to-Gas concepts after optimisation: D8.3. Report on the costs involved with PtG technologies and their potentials across the EU (2018). 
+                #URL https://www.storeandgo.info/fileadmin/downloads/deliverables_2019/20190801-STOREandGO-D8.3-RUG-Report_on_the_costs_involved_with_PtG_technologies_and_their_potentials_across_the_EU.pdf
+                om_annual: 0.19 #€ per kWh
+                #1.5% of investment costs
+                #12.67€ * 0.015 = 0.19€
+                #p.17
+                #Charlotte van Leeuwen, Andreas Zauner: Innovative large-scale energy storage technologies and Power-to-Gas concepts after optimisation: D8.3. Report on the costs involved with PtG technologies and their potentials across the EU (2018). 
+                #URL https://www.storeandgo.info/fileadmin/downloads/deliverables_2019/20190801-STOREandGO-D8.3-RUG-Report_on_the_costs_involved_with_PtG_technologies_and_their_potentials_across_the_EU.pdf
+                
+    hydrogen_storage_high_pressure:
+        essentials:
+            name: 'Hydrogen Storage (300 Bar)'
+            color: '#EDE833'
+            parent: storage
+            carrier: hydrogen_high_pressure
+        constraints:
+            energy_eff: 1 #no loss in pressure tanks
+            storage_loss: 0 # fraction of the power stored that gets lost each hour
+            #no loss over time assumed
+            lifetime: 20
+            #p.11
+            #Duman, A.C., Güler, O.: Techno-economic analysis of off-grid pv/wind/fuel cell hybrid system combinations with a comparison of regularly and seasonally occupied households. Sustainable Cities and Society 42, 107–126 (2018). 
+            #DOI 10.1016/j.scs.2018.06.029
+        costs:
+            monetary:
+                storage_cap: 12.14 # € per kWh storage capacity
+                #According to manufacturer from 07/20/2021
+                om_annual: 0.16 #€ per kWh
+                #According to manufacturer from 07/20/2021
+                
+                
+    #CONVERSION   
+    
+    wshp:
+        essentials:
+            name: 'Wolf BWW-1-11 High-Efficiency Water-To-Water Heat Pump For Indoor Installation'
+            color: '#9A4EB9'
+            parent: conversion_plus
+            #Normally a wshp has a water (heat), an electricity input and a water (heat) output. Because it is not possible to model a COP in Calliope that changes depending on the input or output temperature, we model this tech without a water input. This makes it suitable for our purpose: With a modeled water input we would not be able to heat up the water when it reached the coldest allowed temperature (equals 0kWh here), because a conversion would require water that equals more than 0kWh of energy.  
+            carrier_in: electricity
+            carrier_out: heat
+        constraints:
+            lifetime: 25 
+            #p.15252
+            #Zuberi, M.J.S., Narula, K., Klinke, S., Chambers, J., Streicher, K.N., Patel, M.K.: Potential and costs of decentralized heat pumps and thermal networks in Swiss residential areas International Journal of Energy Research 45(10), 15245–15264 (2021).
+            #DOI 10.1002/er.6801
+            energy_eff: 3.7
+            #it is not possible to model a COP in Calliope that changes depending on the input or output temperature.
+            #We use the SPF (seasonal performance factor)
+            #the SPF of three representative evaluated water source heat pumps was determined at 3.7
+            #p.2
+            #Fraunhofer ISE: Heat pump efficiency: Analysis and evaluation of heat pump efficiency in real-life conditions (2011). 
+            #URL https://wp-monitoring.ise.fraunhofer.de/wp-effizienz/download/final_report_wp_effizienz_en.pdf
+        costs:
+            monetary:
+                energy_cap: 323.51 #€ per kW
+                #energy_cap equals the maximum sum carrier_prod at once (output, here thermal energy)
+                #6729€/20.8kW = 323.51€ per kW
+                #Market price as of 04/12/2022
+                om_annual: 3.24 #€ per kW
+                #1% of investment costs
+                #p.15252
+                #Zuberi, M.J.S., Narula, K., Klinke, S., Chambers, J., Streicher, K.N., Patel, M.K.: Potential and costs of decentralized heat pumps and thermal networks in Swiss residential areas International Journal of Energy Research 45(10), 15245–15264 (2021).
+                #DOI 10.1002/er.6801
+
+    gas_boiler:
+        essentials: 
+            name: 'Vaillant ecoTEC Plus VC 146/5-5 Gas Condensing Boiler'
+            color: '#CC1D25'
+            parent: conversion_plus
+            carrier_in: gas
+            carrier_in_2: electricity
+            carrier_out: heat
+            primary_carrier_in: gas
+        constraints:
+            lifetime: 15
+            #p.2497
+            #Vignali, G.: Environmental assessment of domestic boilers: A comparison of condensing and traditional technology using life cycle assessment methodology Journal of Cleaner Production 142, 2493–2508 (2017).
+            #DOI 10.1016/j.jclepro.2016.11.025
+            energy_eff: 1
+            #Assumption: Gas gets fully converted to heat -> energy_eff from gas to heat = 1
+            carrier_ratios.carrier_in_2.electricity: 0.08
+            #Seasonal space heating efficiencies (ETAs) = 
+            #annual net heat demand in kWh/a divided by annual energy consumption in kWh/a = 0.93
+            #1/0.93 = 1.08
+            #1.08 - 1 = 0.08
+            #Vaillant Deutschland GmbH & Co. KG: Gas-Brennwertgerät ecoTEC plus VC/VCW 5-5 (2022).
+            #URL https://www.vaillant.de/heizung/produkte/gas-brennwertgerat-ecotec-plus-202178.html
+        costs:
+            monetary:
+                energy_cap: 135.36 #€ per kW
+                #energy_cap equals the maximum sum carrier_prod at once (output, here thermal energy)
+                #1895€/14kW = 135.36€ per kW
+                #Market price as of 08/01/2021
+                om_annual: 3.05 #€ per kW
+                #2.25% of investment costs
+                #p.1743
+                #Brkić, D., Tanasković, T.I.: Systematic approach to natural gas usage for domestic heating in urban areas Energy 33(12), 1738–1753 (2008).
+                #DOI 10.1016/j.energy.2008.08.009
+    
+    alkaline_electrolyzer:
+        essentials:
+            name: 'Alkaline Electrolyzer'
+            color: '#6A7D39'
+            parent: conversion_plus
+            carrier_in: electricity
+            carrier_out: hydrogen
+            carrier_out_2: heat
+            primary_carrier_out: hydrogen
+        constraints:
+            energy_eff: 0.64 #Conversion from carrier_in to carrier_out
+            #p.62
+            #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+            #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+            carrier_ratios.carrier_out_2.heat: 0.47 #what fraction gets produced when one unit of hydrogen gets produced
+            #Alkaline and PEM electrolyzers have a waste heat temperature in a range of 60 to 80°C and a waste heat output (depending on efficiency) in a range of about 30% of the electrical power. -> 0.3/0.64 = 0.47
+            #p.59
+            #Zauner, A., Böhm, H., Rosenfeld, D.C., Tichler, R.: Innovative large-scale energy storage technologies and Power-to-Gas concepts after optimization: D7. 7. Analysis on future technology options and on techno-economic optimization (2019).
+            #URL https://www.storeandgo.info/fileadmin/downloads/deliverables_2019/20190801-STOREandGO-D7.7-EIL-Analysis_on_future_technology_options_and_on_techno-economic_optimization.pdf    
+            lifetime: 28 #years
+            #2020 value
+            #p.65
+            #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+            #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+        costs:
+            monetary:
+                energy_cap: 846.72 # € per kW maximum output capacity
+                #energy_cap equals the maximum sum carrier_prod at once (output, here hydrogen and thermal energy)
+                #The source refers to kWel and not kW of the sum of the output carriers
+                #take upper bound because of small scale: 900€ per kWel
+                #The sum of carrier_prod for each 1kWel carrier_consumed is: 0.64 + 0.64*0.47 = 0.9408 kW
+                #0.9408*900 = 846.72 €/kW (kW refers to the sum of all output carriers here)
+                #p.63
+                #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+                #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+                om_annual: 42.34 #€ per kW
+                #Because of small scale take the highest OPEX value: 5% of investment costs
+                #0.05*846.72€ per kW = 42.34€ per kW
+                #p.64
+                #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+                #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+                
+                
+    pem_electrolyzer:
+        essentials:
+            name: 'PEM Electrolyzer'
+            color: '#CC1D25'
+            parent: conversion_plus
+            carrier_in: electricity
+            carrier_out: hydrogen
+            carrier_out_2: heat
+            primary_carrier_out: hydrogen
+        constraints:
+            energy_eff: 0.68 #Conversion from carrier_in to carrier_out
+            #p.62
+            #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+            #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+            carrier_ratios.carrier_out_2.heat: 0.44 #what fraction gets produced when one unit of hydrogen gets produced
+            #Alkaline and PEM electrolyzers have a waste heat temperature in a range of 60 to 80°C and a waste heat output (depending on efficiency) in a range of about 30% of the electrical power. -> 0.3/0.68 = 0.44
+            #p.59
+            #Zauner, A., Böhm, H., Rosenfeld, D.C., Tichler, R.: Innovative large-scale energy storage technologies and Power-to-Gas concepts after optimization: D7. 7. Analysis on future technology options and on techno-economic optimization (2019).
+            #URL https://www.storeandgo.info/fileadmin/downloads/deliverables_2019/20190801-STOREandGO-D7.7-EIL-Analysis_on_future_technology_options_and_on_techno-economic_optimization.pdf
+            lifetime: 25 #years
+            #p.65
+            #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+            #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+            
+        costs:
+            monetary:
+                energy_cap: 1272.96 #€ per kW maximum output capacity
+                #energy_cap equals the maximum sum carrier_prod at once (output, here hydrogen and thermal energy)
+                #The source refers to kWel and not kW of the sum of the output carriers
+                #take upper bound because of small scale: 1300€ per kWel
+                #The sum of carrier_prod for each 1kWel carrier_consumed is: 0.68 + 0.68*0.44 = 0.9792 kW
+                #0.9792*1300 = 1272.96 €/kW (kW refers to the sum of all output carriers here)
+                #p.63
+                #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+                #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+                om_annual: 63.65 #€ per kW
+                #Because of small scale take the lowest value: 5% of investment costs
+                #0.05*1272.96€ per kW = 63.65€ per kW
+                #p.64
+                #Bertuccioli, L., Chan, A., Hart, D., Lehner, F., Madden, B., Standen, E.: Development of Water Electrolysis in the European Union, Fuel Cells and Hydrogen Joint Undertaking Final Report, 1–69 (2014).
+                #URL https://www.fch.europa.eu/sites/default/files/study%20electrolyser_0.pdf
+                
+    compressor:
+        essentials:
+            name: 'Hydrogen Compressor'
+            color: '#86F9BF'
+            parent: conversion_plus
+            carrier_in: hydrogen
+            carrier_in_2: electricity
+            carrier_out: hydrogen_high_pressure
+            primary_carrier_in: hydrogen
+        constraints:
+            energy_eff: 0.995 
+            #gas loss of 0.5% of the input hydrogen => 0.995
+            #p.7193
+            #Patterson, T., Esteves, S., Carr, S., Zhang, F., Reed, J., Maddy, J., Guwy, A.: Life cycle assessment of the electrolytic production and utilization of low carbon hydrogen vehicle fuel International Journal of Hydrogen Energy 39(14), 7190–7201 (2014).
+            #DOI 10.1016/j.ijhydene.2014.02.044
+            carrier_ratios.carrier_in_2.electricity: 0.08
+            #multistage compressor: at 300 bar 8% electrical energy in relation to compressed hydrogen (derived from Figure 6)
+            #p.39
+            #Bossel, U., Eliasson, B., Taylor, G.: The future of the hydrogen economy: Bright or bleak? Cogeneration and Competitive Power Journal 18(3), 29–70 (2003). 
+            #DOI 10.1080/15453660309509023
+            lifetime: 10 #years
+            #p.28
+            #Charlotte van Leeuwen, Andreas Zauner: Innovative large-scale energy storage technologies and Power-to-Gas concepts after optimisation: D8.3. Report on the costs involved with PtG technologies and their potentials across the EU (2018).
+            #URL https://www.storeandgo.info/fileadmin/downloads/deliverables_2019/20190801-STOREandGO-D8.3-RUG-Report_on_the_costs_involved_with_PtG_technologies_and_their_potentials_across_the_EU.pdf    
+        costs:
+            monetary:
+                energy_cap: 2125
+                #2500$/kW hydrogen
+                #2125€/kW hydrogen
+                #p.7
+                #Gökcek, M., Kale, C.: Techno-economical evaluation of a hydrogen refuelling station powered by wind-PV hybrid power system: A case study for Izmir-Cesme. International Journal of Hydrogen Energy 43(23), 10615–10625 (2018). 
+                #DOI 10.1016/j.ijhydene.2018.01.082
+                om_annual: 42.5 
+                #50$/kW
+                #42.5€/kW
+                #p.7
+                #Gökcek, M., Kale, C.: Techno-economical evaluation of a hydrogen refuelling station powered by wind-PV hybrid power system: A case study for Izmir-Cesme. International Journal of Hydrogen Energy 43(23), 10615–10625 (2018). 
+                #DOI 10.1016/j.ijhydene.2018.01.082
+            
+    
+    pem_fuel_cell:
+        essentials:
+            name: 'PEM Fuel Cell'
+            color: '#CC1D25'
+            parent: conversion_plus
+            carrier_in: hydrogen
+            carrier_out: heat
+            carrier_out_2: electricity
+            primary_carrier_out: heat
+        constraints:
+            energy_eff: 0.5 #what fraction gets produced when one unit of hydrogen gets produced
+            #According to manufacturer from 10/06/2021
+            carrier_ratios.carrier_out_2.electricity: 0.91 #what fraction gets produced when one unit of heat gets produced
+            #According to manufacturer from 10/06/2021
+            lifetime: 30 #years
+            #According to manufacturer from 10/06/2021
+        costs:
+            monetary:
+                energy_cap: 2347.42 #€ per kW output
+                #According to manufacturer from 10/06/2021
+                om_annual: 44.71 #€ per kW output per year
+                #According to manufacturer from 10/06/2021
+                om_con: 0.02 #€ maintenance costs per consumed kWh hydrogen (normally carrier consumption costs in Calliope)
+                #According to manufacturer from 10/06/2021
+                
+    
+    dummy_tech: #This tech only exists to convert the pressurized hydrogen to hydrogen of lower pressure
+        essentials:
+            name: 'Dummy Tech'
+            color: '#A75051'
+            parent: conversion
+            carrier_in: hydrogen_high_pressure
+            carrier_out: hydrogen
+        constraints:
+            energy_eff: 1
+            lifetime: 30
+        costs:
+            monetary:
+                energy_cap: 0
+                
+                
+        
+    #RENEWABLES
+
+
+    pv:
+        essentials:
+            name: 'LG Solar LG390N1C-E6 NeON H'
+            color: '#F9D956'
+            parent: supply_plus
+            carrier_out: electricity
+        constraints:
+            export_carrier: electricity #allow the export of excess energy to the grid
+            #Revenue for export will be considered on a per-location basis.
+            resource: file=pv_resource.csv:Edinburgh  
+            #Already accounts for panel efficiency through parameters in renewables.ninja, 
+            #system loss (fraction) is set to 0, losses are modeled in the inverter
+            #tilt 35 degrees
+            #Azimuth 180 degrees
+            resource_unit: energy_per_cap
+            resource_eff: 0.98
+            #98% efficiency, 2% inverter loss
+            #p.1
+            #Burger, B., Kranzer, D.: Extreme high efficiency PV-power converters. In: 2009 13th European Conference on Power Electronics and Applications, pp. 1–13 (2009).
+            #URL https://ieeexplore.ieee.org/abstract/document/5279115
+            force_resource: true
+            resource_area_per_energy_cap: 4.72 # m2 of panels needed to fit 1kWp of panels
+            #1.042m * 1.768m = 1.8423m^2 
+            #1.8423m^2 for 0.390kWp -> 4.72m^2 for 1kWp
+            #LG Electronics Inc.: LG NeON H (2021).
+            #URL https://www.lg.com/global/business/download/resources/CT00000279/Datasheet_LG_NeON%20H%20120cells_N1C_E6_2021[20210521_140913].pdf
+            lifetime: 30
+            #30 years lifetime
+            #p.19
+            #IRENA, IEA-PVPS: End-of-life management: Solar photovoltaic panels (2016).
+            #URL https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2016/IRENA_IEAPVPS_End-of-Life_Solar_PV_Panels_2016.pdf
+        costs:
+            monetary:
+                energy_cap: 797.18 #€ per kWp
+                #PV--------------------
+                #268,00€/0.390kWp = 687.18€/kWp
+                #Market price as of 08/01/2021
+                #LG Electronics Inc.: LG NeON H (2021).
+                #URL https://www.lg.com/global/business/download/resources/CT00000279/Datasheet_LG_NeON%20H%20120cells_N1C_E6_2021[20210521_140913].pdf
+                #https://www.photovoltaik4all.de/solarmodule/lg-neon-h-lg390n1c-e6
+                #INVERTER----------------
+                #110€ per kWp
+                #p.11
+                #Vartiainen, E., Masson, G., Breyer, C.: PV LCOE in Europe 2014-30 (2015). 
+                #URL https://etip-pv.eu/publications/etip-pv-publications/download/pv-costs-in-europe-2014-2030
+                #BOTH--------------------
+                #PV + Inverter = 687.18 + 110 = 797.18
+                om_annual: 11.96 #€ per kWp
+                #PV------------------------
+                #0.015 * 687.18€/kW = 10.31
+                #p.10
+                #IRENA: Economic assessment of pv and wind for energy planning (2020).    
+                #URL https://www.irena.org/-/media/Files/IRENA/Agency/Events/2014/Jul/15/15_Economic_assessment_of_PV_and_wind_for_energy_planning_Arusha_Tanzania.pdf?la=en&hash=ED061A535145DD86023F615866220C220B601FFC
+                #INVERTER-----------------
+                #0.015 * 110€/kW = 1.65€/kW
+                #p.10 
+                #IRENA: Economic assessment of pv and wind for energy planning (2020).    
+                #URL https://www.irena.org/-/media/Files/IRENA/Agency/Events/2014/Jul/15/15_Economic_assessment_of_PV_and_wind_for_energy_planning_Arusha_Tanzania.pdf?la=en&hash=ED061A535145DD86023F615866220C220B601FFC
+                #BOTH--------------------
+                #PV + Inverter = 10.31 + 1.65 = 11.96
+                export: -0.0580
+                
+    
+ 
+    st:
+        essentials:
+            name: 'Vaillant Flat Plate Collector auroTHERM VFK 145/3 V'
+            color: '#4C307A'
+            parent: supply_plus
+            carrier_out: heat
+        constraints:
+            resource: file=st_resource.csv:Edinburgh
+            resource_unit: energy_per_cap
+            resource_eff: 0.8
+            #Vaillant Deutschland GmbH & Co. KG: Flachkollektoren auroTHERM (2022).
+            #URL https://www.vaillant.de/heizung/produkte/flachkollektor-aurotherm-82371.html
+            force_resource: true
+            resource_area_per_energy_cap: 1.53 
+            #recource area 2.51m2 
+            #376.46€/614€ = 0.61
+            #0.61*2.51m2 = 1.53m2 per kW
+            #Vaillant Deutschland GmbH & Co. KG: Flachkollektoren auroTHERM (2022).
+            #URL https://www.vaillant.de/heizung/produkte/flachkollektor-aurotherm-82371.html
+            lifetime: 25
+            #p.24
+            #Greening, B., Azapagic, A.: Domestic solar thermal water heating: A sustainable option for the UK? Renewable Energy 63, 23–36 (2014).
+            #DOI 10.1016/j.renene.2013.07.048
+        costs:
+            monetary:
+                energy_cap: 377.01 #€ per kW
+                #Aperture surface 2,33m2 614.90€ -> 1m2 263,91€
+                #Market price as of 08/01/2021
+                #conversion factor when converting m2 to kWth: 0.7kWth/m2. Cost conversion: m2: 263,91€ -> 1kWth: 263,91€/0.7 = 377,01€
+                #IEA SHC TCP: Recommendation: Converting solar thermal collector area into installed capacity (m2 to kwth) (2004).
+                #URL https://www.iea-shc.org/Data/Sites/1/documents/statistics/Technical_Note-New_Solar_Thermal_Statistics_Conversion.pdf
+                om_annual: 3.77 #€ per kW 
+                #1% of investment costs
+                #p.3379
+                #Kalogirou, S.A., Tripanagnostopoulos, Y.: Hybrid PV/T solar systems for domestic hot water and electricity production Energy Conversion and Management 47(18), 3368–3382 (2006). 
+                #DOI 10.1016/j.enconman.2006.01.012
+ 
+                
+                
+
+
+    #DEMAND
+    
+    
+    demand_electricity:
+        essentials:
+            name: 'Electrical Demand'
+            color: '#072486'
+            parent: demand
+            carrier: electricity
+        constraints:
+            resource: file=demand_electricity.csv
+        
+    
+    demand_heat:
+        essentials:
+            name: 'Heat Demand'
+            color: '#C98AAD'
+            parent: demand
+            carrier: heat
+        constraints:
+            resource: file=demand_heat.csv
+            
+
+    #DISTRIBUTION
+    
+    #A typical distance between two houses in Edinburgh was measured as 50 meters, maybe try to account for that in the simulation 
+    
+    electrical_line:
+        essentials:
+            name: 'Electrical Line
+            color: '#6783E3'
+            parent: transmission
+            carrier: electricity
+        constraints:
+            energy_eff_per_distance: 0.999999
+            lifetime: 30
+        costs:
+            monetary:
+                om_prod: 0 #€/kWh
+         
+   
+    heat_pipe:
+        essentials:
+            name: 'Heat Pipe'
+            color: '#8E2999'
+            parent: transmission
+            carrier: heat
+        constraints:
+            energy_eff_per_distance: 0.999999
+            lifetime: 30
+        costs:
+            monetary:
+                om_prod: 0 #€/kWh
+                
+    hydrogen_pipe:
+        essentials:
+            name: 'Hydrogen Pipe (30 Bar)'
+            color: '#8E2999'
+            parent: transmission
+            carrier: hydrogen
+        constraints:
+            energy_eff_per_distance: 0.999999
+            lifetime: 30
+        costs:
+            monetary:
+                om_prod: 0 #€/kWh
+                
+    hydrogen_pipe_high_pressure:
+        essentials:
+            name: 'Hydrogen Pipe (300 Bar)'
+            color: '#8E2199'
+            parent: transmission
+            carrier: hydrogen_high_pressure
+        constraints:                 
+            energy_eff_per_distance: 0.999999
+            lifetime: 30
+        costs:
+            monetary:
+                om_prod: 0 #€/kWh
+                
+     
+    gas_pipe:
+        essentials:
+            name: 'Gas Pipe'
+            color: '#8E2110'
+            parent: transmission
+            carrier: gas
+        constraints:                 
+            energy_eff_per_distance: 0.999999
+            lifetime: 30     
+        costs:
+            monetary:
+                om_prod: 0 #€/kWh
+     
+     
+     
+     
+     
+     
+#EMISSIONS
+
+        #Grid
+techs.grid_electricity.costs.emissions.om_con: 0.1987 # kgCO2/kWh
+        #see Notebooks
+techs.grid_gas.costs.emissions.om_con: 0.285 # kgCO2/kWh
+        #Grey emissions of the boiler + direct emissions
+        #0.285 kg/KWh
+        #p.9
+        #Famiglietti, J., Toppi, T., Pistocchini, L., Scoccia, R., Motta, M.: A comparative environmental life cycle assessment between a condensing boiler and a gas driven absorption heat pump Science of The Total Environment 762, 144392 (2021).
+        #DOI 10.1016/j.scitotenv.2020.144392
+
+        #Storage
+techs.battery.costs.emissions.storage_cap: 61 # kgCO2/kWh
+        #Tesla has a high proportion of renewable energy for their production
+        #p.19
+        #Tesla: Impact report 2019 (2020). 
+        #URL https://www.tesla.com/ns_videos/2019-tesla-impact-report.pdf
+        #we take the lower value, because "The difference in the range depends mainly on varying the electricity mix for cell production."
+        #p.5
+        #Emilsson, E., Dahllöf, L.: Lithium-Ion Vehicle Battery Production Status 2019 on Energy Use, CO 2 Emissions, Use of Metals, Products Environmental Footprint, and Recycling (2019). 
+        #DOI 10.13140/RG.2.2.29735.70562
+techs.wttes.costs.emissions.storage_cap: 17.31 # kgCO2-eq/kWh
+        #Their assumed lifetime is 50 years for the storage tank
+        #The absolute emissions associated with the construction phase were divided by the corresponding lifetimes to obtain annual emissions.
+        #p.864
+        #3580 kg CO2-eq/year -> 3580 kg CO2-eq/year * 50 years = 179000 kg CO2-eq
+        #p.862
+        #118.60m3 capacity -> 179000 kg CO2-eq/118.60m3 = 1509.27kg CO2-eq/m3
+        #p.863
+        #Guillen-Lambea, S., Carvalho, M., Delgado, M., Lazaro, A.: Sustainable enhancement of district heating and cooling configurations by combining thermal energy storage and life cycle assessment. Clean Technologies and Environmental Policy 23(3), 857–867 (2021). 
+        #DOI 10.1007/s10098-020-01941-9
+        #Our tank: 
+        #5000L/436,042kWh = 11.47L/kWh -> 0.01147m3/kWh
+        #1509.27kg CO2-eq/m3 * 0.01147m3/kWh = 17.31 kgCO2-eq/kWh
+techs.buffer_storage.costs.emissions.storage_cap: 17.31 # kgCO2-eq/kWh
+        #Their assumed lifetime is 50 years for the storage tank
+        #The absolute emissions associated with the construction phase were divided by the corresponding lifetimes to obtain annual emissions.
+        #p.864
+        #3580 kg CO2-eq/year -> 3580 kg CO2-eq/year * 50 years = 179000 kg CO2-eq
+        #p.862
+        #118.60m3 capacity -> 179000 kg CO2-eq/118.60m3 = 1509.27kg CO2-eq/m3
+        #p.863
+        #Guillen-Lambea, S., Carvalho, M., Delgado, M., Lazaro, A.: Sustainable enhancement of district heating and cooling configurations by combining thermal energy storage and life cycle assessment. Clean Technologies and Environmental Policy 23(3), 857–867 (2021). 
+        #DOI 10.1007/s10098-020-01941-9
+        #Our tank: 
+        #5000L/436,042kWh = 11.47L/kWh -> 0.01147m3/kWh
+        #1509.27kg CO2-eq/m3 * 0.01147m3/kWh = 17.31 kgCO2-eq/kWh
+techs.hydrogen_storage_low_pressure.costs.emissions.storage_cap: 5.54 # kgCO2-eq/kWh
+        #No life cycle assessments can be found for tanks with 30 bar -> calculation based on steel production, which has the biggest influence on the CO2 balance
+        #Tank weighs 16 tons with 60m^3 volume
+        #Gschwander, M.: Bergwelt Kandel: Energiespeicherkonzept auf Wasserstoffbasis (2020).
+        #URL https://www.badenova.de/downloads/unternehmen/engagement/innovationsfonds-downloads/unternehmensbereiche/stab/innovationsfonds/abschlussberichte/2019/2019-08-abschlussbericht-innovationsfond-bergwelt-kandel.pdf
+        #1.72 kg CO2 per kg steel
+        #p.18
+        #Federal Ministry for Economic Affairs and Energy: For a strong steel industry in Germany and Europe: The Steel Action Concept (2020).
+        #URL https://www.bmwi.de/Redaktion/EN/Publikationen/Wirtschaft/the-steel-action-concept.pdf?__blob=publicationFile&v=3
+        #60m3 = 148.9kg hydrogen at 30 bar and 20 degrees celsius
+        #1kg of hydrogen = 33.33 kWh
+        #148.9kg Wasserstoff -> 4962.84kWh
+        #16000kg/4962.84kWh = 3.22kg/kWh
+        #3.22kg/kWh * 1.72 (Steel -> Co2) = 5.54 kgCO2-eq/kWh
+techs.hydrogen_storage_high_pressure.costs.emissions.storage_cap: 0.43 # kgCO2-eq/kWh
+        #The best data that could be identified is for a 350 bar tank.
+        #14.2kgCO2-eq/kgH2
+        #1kg of hydrogen = 33.33kWh
+        #14.2/33.33 = 0.43kgCo2-eq/kWh
+        #p.27
+        #Hua, T.Q., Ahluwalia, R.K., Peng, J.-K., Kromer, M., Lasher, S., McKenney, K., Law, K., Sinha, J.: Technical assessment of compressed hydrogen storage tank systems for automotive applications International Journal of Hydrogen Energy 36(4), 3037–3049 (2011).
+        #URL https://www1.eere.energy.gov/hydrogenandfuelcells/pdfs/compressedtank_storage.pdf
+
+        #Conversion
+techs.wshp.costs.emissions.energy_cap: 272.5 # kgCO2-eq/kW
+        #There were no data for water source heat pumps -> take "Sole-Wasser Wärmepumpe 8 kW" and calculate per 1kW
+        #2180 kgCO2-eq/8kW output
+        #272.5 kgCO2-eq/kW      
+        #p.15               
+        #KBOB, ecobau, IPB: Okobilanzdaten im Baubereich 2009/1:2016 (2016).
+        #URL https://www.kbob.admin.ch/dam/kbob/de/dokumente/Themen%20und%20Trends/Oekobilanzen/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf.download.pdf/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf
+techs.alkaline_electrolyzer.costs.emissions.energy_cap: 385.80 # kgCO2-eq/kW output (hydrogen + heat)
+        #Global warming potential for 100 years (GWP 100)
+        #1.97E+04 = 19700 kgCO2-eq/50kWel = 394 kgCO2-eq/kWel
+        #p.11
+        #Lotric, A., Sekavcnik, M., Kustrin, I., Mori, M.: Lifecycle assessment of hydrogen technologies with the focus on EU critical raw materials and end-of-life strategies. International Journal of Hydrogen Energy 46(16), 10143–10160 (2021). 
+        #DOI 10.1016/j.ijhydene.2020.06.190
+        #this is for electric input, multiply by the factor from above:
+        #0.9408 * 394 kgCO2-eq/kWel = 370.68 kgCO2-eq/kW hydrogen output
+techs.pem_electrolyzer.costs.emissions.energy_cap: 312.66 # kgCO2-eq/kW output (hydrogen + heat)
+        #Global warming potential for 100 years (GWP 100)
+        #1.72E+04 = 17200 kgCO2-eq/50kWel = 344 kgCO2-eq/kWel
+        #p.11
+        #Lotric, A., Sekavcnik, M., Kustrin, I., Mori, M.: Lifecycle assessment of hydrogen technologies with the focus on EU critical raw materials and end-of-life strategies. International Journal of Hydrogen Energy 46(16), 10143–10160 (2021). 
+        #DOI 10.1016/j.ijhydene.2020.06.190
+        #this is for electric input, multiply by the factor from above:
+        #0.9792 * 344 kgCO2-eq/kWel = 336.8448 kgCO2-eq/kW hydrogen output
+techs.pem_fuel_cell.costs.emissions.energy_cap: 21.33 # kgCO2-eq/kW output (electricity + heat)
+        #Global warming potential for 100 years (GWP 100)
+        #Take "LT PEMFC"
+        #224 kgCO2-eq per 5kWel
+        #Ratio of total output power to electricity output of our modeled tech: 89.46kW output/42.6kWel = 2.1
+        #5kWel corresponds to 2.1*5=10.5kW output
+        #224 kgCO2-eq/10.5kW output = 21.33 kgCO2-eq/kW output
+        #p.11
+        #Lotric, A., Sekavcnik, M., Kustrin, I., Mori, M.: Lifecycle assessment of hydrogen technologies with the focus on EU critical raw materials and end-of-life strategies. International Journal of Hydrogen Energy 46(16), 10143–10160 (2021). 
+        #DOI 10.1016/j.ijhydene.2020.06.190
+techs.compressor.costs.emissions.energy_cap: 53.66 # kgCO2-eq/kW output (compressed hydrogen)
+        #We assume that the mass of CO2-eq through production of a hydrogen compressor is equivalent to the triple of the mass of CO2-eq producing steel with the weight of the compressor
+        #650kg for 5kW compressor mainly consisting of steel
+        #p.7193
+        #Patterson, T., Esteves, S., Carr, S., Zhang, F., Reed, J., Maddy, J., Guwy, A.: Life cycle assessment of the electrolytic production and utilization of low carbon hydrogen vehicle fuel International Journal of Hydrogen Energy 39(14), 7190–7201 (2014).
+        #DOI 10.1016/j.ijhydene.2014.02.044
+        #1.72 kg CO2 per kg steel
+        #p.18
+        #Federal Ministry for Economic Affairs and Energy: For a strong steel industry in Germany and Europe: The Steel Action Concept (2020).
+        #URL https://www.bmwi.de/Redaktion/EN/Publikationen/Wirtschaft/the-steel-action-concept.pdf?__blob=publicationFile&v=3
+        #CO2-eq through 650kg steel production: 1.72*650=1118kg CO2-eq
+        #3*1118kg CO2-eq = 3354kg CO2-eq
+        #Relation of kWel and hydrogen output in kW:
+        #3354kg CO2-eq / 5kWel = 670.8 CO2-eq / kWel
+        #1kW/0.08kWel = 12.5kW hydrogen output per kW electricity
+        #670.8 CO2-eq / kWel = 670.8 CO2-eq / 12.5 kW hydrogen output = 53.66  CO2-eq / kW hydrogen output
+techs.dummy_tech.costs.emissions.energy_cap: 0.000001
+        
+        #renewables
+techs.pv.costs.emissions.energy_cap: 2030 # kgCO2-eq/kWp
+        #Solarstromanlage Schrägdach
+        #p.15             
+        #KBOB, ecobau, IPB: Okobilanzdaten im Baubereich 2009/1:2016 (2016).
+        #URL https://www.kbob.admin.ch/dam/kbob/de/dokumente/Themen%20und%20Trends/Oekobilanzen/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf.download.pdf/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf
+techs.st.costs.emissions.energy_cap: 281.52 # kgCO2-eq/kWp
+        #184 kgCO2-eq/m2
+        #1.53 m2/kW -> see techs.yaml
+        #184 kgCO2-eq/m2 * 1.53 m2/kW = 281.52kgCO2-eq/kW
+        #Flachkollektor für Raumheizung und Warmwasser EFH
+        #p.15
+        #KBOB, ecobau, IPB: Okobilanzdaten im Baubereich 2009/1:2016 (2016).
+        #URL https://www.kbob.admin.ch/dam/kbob/de/dokumente/Themen%20und%20Trends/Oekobilanzen/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf.download.pdf/Empfehlung_Oekobilanzdaten_Baubereich_DT_FR.pdf
+ 
+
+
+
+
+
+
+
