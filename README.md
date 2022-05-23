@@ -1,1 +1,1 @@
-The model is developed with Calliope 0.6.6
+The model is developed for Calliope 0.6.6
