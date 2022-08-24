@@ -1,4 +1,4 @@
-This is the code related to a presentation at the the OR2022 Conference at KIT in Karlsruhe, Germany.
+This is the Calliope model related to the presentation at the the OR2022 Conference at KIT in Karlsruhe, Germany.
 
 The presentation slides can be found [here](OR2022_Presentation.pdf).
 
